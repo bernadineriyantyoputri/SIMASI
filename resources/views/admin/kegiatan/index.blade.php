@@ -52,9 +52,15 @@
             </div>
 
             <!-- PROGRESS -->
+            @php
+                $persen = $item->kuota > 0 ? ($item->peserta_count / $item->kuota) * 100 : 0;
+            @endphp
+
             <div class="mt-4">
                 <div class="h-2 bg-gray-200 rounded-full">
-                    <div class="h-2 bg-blue-600 rounded-full w-[70%]"></div>
+                    <div class="h-2 bg-blue-600 rounded-full"
+                         style="width: {{ $persen }}%">
+                    </div>
                 </div>
             </div>
 
@@ -76,6 +82,14 @@
                         Hapus
                     </button>
                 </form>
+            </div>
+
+            <!-- LIHAT PESERTA -->
+            <div class="mt-3 text-center">
+                <a href="{{ route('admin.kegiatan.peserta', $item->id) }}"
+                   class="text-blue-600 hover:underline text-sm">
+                    Lihat Daftar Peserta →
+                </a>
             </div>
 
         </div>

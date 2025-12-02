@@ -14,6 +14,11 @@ class PesertaKegiatan extends Model
         'kegiatan_id'
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+    
     public function kegiatan()
     {
          return $this->belongsTo(Kegiatan::class, 'kegiatan_id');

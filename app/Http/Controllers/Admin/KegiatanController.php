@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\Storage;
 class KegiatanController extends Controller
 {
     public function index() {
-        $kegiatan = Kegiatan::all();
+        $kegiatan = Kegiatan::withCount('peserta')
+        ->orderBy('tanggal', 'desc')
+        ->get();
         return view('admin.kegiatan.index', compact('kegiatan'));
     }
 
@@ -112,9 +114,19 @@ class KegiatanController extends Controller
     }
 
     // Hitung jumlah peserta
-    $jumlahPeserta = $kegiatan->pendaftaran()->count();
+    $jumlahPeserta = $kegiatan->peserta()->count();
 
-    return view('user.kegiatan.show', compact('kegiatan', 'jumlahPeserta'));
+    return view('admin.kegiatan.show', compact('kegiatan', 'jumlahPeserta'));
+}
+
+public function peserta($id)
+{
+    $kegiatan = Kegiatan::findOrFail($id);
+    $peserta = \App\Models\PesertaKegiatan::where('kegiatan_id', $id)
+                ->with('user')
+                ->get();
+
+    return view('admin.kegiatan.peserta', compact('kegiatan', 'peserta'));
 }
 
 }
