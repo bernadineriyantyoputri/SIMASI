@@ -11,84 +11,85 @@ use App\Models\PesertaKegiatan;
 class KegiatanController extends Controller
 {
     /**
-     * Tampilkan semua kegiatan.
+     * Tampilkan semua kegiatan (include jumlah peserta).
      */
     public function index()
     {
-        $kegiatan = Kegiatan::orderBy('tanggal', 'asc')->get();
+        $kegiatan = Kegiatan::withCount('peserta')
+                    ->orderBy('tanggal', 'asc')
+                    ->get();
+
         return view('user.kegiatan.index', compact('kegiatan'));
     }
 
     /**
-     * Tampilkan detail kegiatan.
+     * Detail kegiatan (include jumlah peserta).
      */
     public function detail($id)
     {
-        $kegiatan = Kegiatan::find($id);
+        $kegiatan = Kegiatan::withCount('peserta')->findOrFail($id);
 
-        if (!$kegiatan) abort(404);
-
-        // Hitung peserta menggunakan model PesertaKegiatan
-        $jumlahPeserta = PesertaKegiatan::where('kegiatan_id', $id)->count();
-
-        return view('user.kegiatan.detail', compact('kegiatan', 'jumlahPeserta'));
+        return view('user.kegiatan.detail', [
+            'kegiatan' => $kegiatan,
+            'jumlahPeserta' => $kegiatan->peserta_count
+        ]);
     }
 
     /**
-     * Daftar peserta ke kegiatan (POST).
+     * Daftar kegiatan (cek kuota dan sudah daftar).
      */
     public function daftar(Request $request, $id)
     {
-        $kegiatan = Kegiatan::find($id);
-
-        if (!$kegiatan) {
-            abort(404);
-        }
-
+        $kegiatan = Kegiatan::withCount('peserta')->findOrFail($id);
         $userId = Auth::id();
 
-        // Cek apakah user sudah terdaftar menggunakan model
-        $sudahDaftar = PesertaKegiatan::where('kegiatan_id', $id)
-                                        ->where('user_id', $userId)
-                                        ->exists();
-
-        if ($sudahDaftar) {
-            return redirect()->back()->with('error', 'Anda sudah mendaftar kegiatan ini.');
+        // Cek sudah daftar
+        if (PesertaKegiatan::where('kegiatan_id', $id)->where('user_id', $userId)->exists()) {
+            return back()->with('error', 'Anda sudah mendaftar kegiatan ini.');
         }
 
-        // Tambahkan peserta menggunakan model
+        // Cek kuota
+        if ($kegiatan->peserta_count >= $kegiatan->kuota) {
+            return back()->with('error', 'Kuota kegiatan sudah penuh.');
+        }
+
+        // Tambah peserta
         PesertaKegiatan::create([
             'kegiatan_id' => $id,
             'user_id' => $userId,
         ]);
 
-        return redirect()->back()->with('success', 'Berhasil mendaftar kegiatan!');
-
-        
+        return back()->with('success', 'Berhasil mendaftar kegiatan!');
     }
+
+    /**
+     * Batalkan pendaftaran.
+     */
     public function batal(Request $request, $id)
-{
-    $userId = auth()->id();
-    
-    $peserta = PesertaKegiatan::where('kegiatan_id', $id)
-                ->where('user_id', $userId)
-                ->first();
+    {
+        $userId = Auth::id();
 
-    if ($peserta) {
+        $peserta = PesertaKegiatan::where('kegiatan_id', $id)
+                    ->where('user_id', $userId)
+                    ->first();
+
+        if (!$peserta) {
+            return back()->with('error', 'Anda belum mendaftar.');
+        }
+
         $peserta->delete();
-        return redirect()->back()->with('success', 'Pendaftaran berhasil dibatalkan.');
+
+        return back()->with('success', 'Pendaftaran berhasil dibatalkan.');
     }
 
-    return redirect()->back()->with('error', 'Anda belum mendaftar kegiatan ini.');
-}
+    /**
+     * Lihat daftar peserta.
+     */
+    public function peserta($id)
+    {
+        $kegiatan = Kegiatan::findOrFail($id);
+        $peserta = PesertaKegiatan::where('kegiatan_id', $id)->with('user')->get();
 
-// Lihat peserta kegiatan
-public function peserta($id)
-{
-    $kegiatan = Kegiatan::findOrFail($id);
-
-    $peserta = PesertaKegiatan::where('kegiatan_id', $id)->with('user')->get();
-
-    return view('user.kegiatan.peserta', compact('kegiatan', 'peserta'));
-}
+        return view('user.kegiatan.peserta', compact('kegiatan', 'peserta'));
+    }
 }

@@ -11,23 +11,27 @@ class AdminController extends Controller
 {
     public function index()
     {
-        // Total user
         $totalUsers = User::count();
-
-        // Total kegiatan
         $totalKegiatan = Kegiatan::count();
 
-        // Absensi rate (contoh: rata-rata persentase hadir semua kegiatan)
         $absensiRate = 0;
         $totalAbsensi = Absensi::count();
-        $totalPeserta = Absensi::sum('jumlah_peserta'); // misal kolom jumlah_peserta ada
+        $totalPeserta = Absensi::sum('jumlah_peserta');
         if ($totalPeserta > 0) {
             $absensiRate = round(($totalAbsensi / $totalPeserta) * 100, 2);
         }
 
-        // Ambil daftar kegiatan terbaru, misal 5 terakhir
-        $kegiatan = Kegiatan::orderBy('tanggal', 'desc')->take(5)->get();
+        // PERBAIKAN DI SINI
+        $kegiatan = Kegiatan::withCount('peserta')
+            ->orderBy('tanggal', 'desc')
+            ->get();
 
-        return view('admin.dashboard', compact('totalUsers', 'totalKegiatan', 'absensiRate', 'kegiatan'));
+
+        return view('admin.kegiatan.index', compact(
+            'totalUsers',
+            'totalKegiatan',
+            'absensiRate',
+            'kegiatan'
+        ));
     }
 }

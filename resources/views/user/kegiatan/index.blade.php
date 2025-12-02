@@ -50,7 +50,7 @@
 
                         <div class="flex gap-1 items-center">
                             <i class="fa-solid fa-users text-[10px]"></i>
-                            {{ $k->peserta }} / {{ $k->kuota }} peserta
+                            {{ $k->peserta_count }} / {{ $k->kuota }} peserta
                         </div>
                     </div>
 

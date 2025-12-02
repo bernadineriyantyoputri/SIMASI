@@ -47,7 +47,7 @@
 
                 <div class="flex items-center gap-2">
                     <i class="fa fa-users"></i>
-                    <span>{{ $item->jumlah_peserta ?? '0' }} peserta</span>
+                    <span>{{ $item->peserta_count }} peserta</span>
                 </div>
             </div>
 

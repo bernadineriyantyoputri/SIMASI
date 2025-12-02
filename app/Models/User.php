@@ -50,4 +50,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Kegiatan::class);
     }
+
+    public function kegiatanDiikuti()
+{
+    return $this->hasMany(\App\Models\PesertaKegiatan::class, 'user_id');
+}
 }

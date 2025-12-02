@@ -47,7 +47,7 @@ Route::middleware(['auth', 'admin'])
     ->group(function () {
 
         Route::get('/', [AdminController::class, 'index'])->name('dashboard');
-
+        
         Route::resource('user', PenggunaController::class);
         Route::resource('kegiatan', AdminKegiatan::class);
         Route::resource('absensi', AdminAbsensi::class);
