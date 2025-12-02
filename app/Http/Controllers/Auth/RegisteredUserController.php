@@ -27,24 +27,26 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'npm' => ['required', 'string', 'max:20'], 
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+   public function store(Request $request): RedirectResponse
+{
+    $request->validate([
+        'name' => ['required', 'string', 'max:255'],
+        'npm' => ['required', 'string', 'max:20'], 
+        'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        'password' => ['required', 'confirmed', Rules\Password::defaults()],
+    ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'npm' => $request->npm, 
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-        
-        event(new Registered($user));
-        Auth::login($user);
-        return redirect(route('dashboard', absolute: false));
-    }
+    $user = User::create([
+        'name' => $request->name,
+        'npm' => $request->npm, 
+        'email' => strtolower($request->email),
+        'password' => Hash::make($request->password),
+    ]);
+
+    event(new Registered($user));
+    Auth::login($user);
+
+    return redirect()->route('user.kegiatan.index');
+}
+
 }

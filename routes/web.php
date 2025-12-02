@@ -15,27 +15,30 @@ use App\Http\Controllers\User\KegiatanController as UserKegiatan;
 use App\Http\Controllers\User\AbsensiController as UserAbsensi;
 use App\Http\Controllers\User\RiwayatController as UserRiwayat;
 
-/*
-|--------------------------------------------------------------------------
-| DEFAULT → redirect ke LOGIN
-|--------------------------------------------------------------------------
-*/
-Route::get('/', function () {
-    return redirect('/login');
-});
 
 /*
 |--------------------------------------------------------------------------
-| LOGIN ADMIN
+| DEFAULT → redirect ke login
+|--------------------------------------------------------------------------
+*/
+Route::get('/', function () {
+    return redirect()->route('login'); // login dari Breeze
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| LOGIN ADMIN (CUSTOM)
 |--------------------------------------------------------------------------
 */
 Route::get('/admin/login', [AdminController::class, 'showLogin'])->name('admin.login');
 Route::post('/admin/login', [AdminController::class, 'login']);
 Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
 
+
 /*
 |--------------------------------------------------------------------------
-| ROUTE ADMIN (middleware: auth + admin)
+| ROUTE ADMIN (MIDDLEWARE)
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'admin'])
@@ -51,67 +54,42 @@ Route::middleware(['auth', 'admin'])
         Route::resource('kas', AdminKas::class);
     });
 
+
+
 /*
 |--------------------------------------------------------------------------
-| ROUTE USER / MEMBER (middleware: auth + verified)
+| ROUTE USER (BREEZE LOGIN)
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'verified'])
     ->name('user.')
     ->group(function () {
 
-        // Dashboard diarahkan ke daftar kegiatan
         Route::get('/dashboard', function () {
             return redirect()->route('user.kegiatan.index');
-        })->name('dashboard');
+        })->name('user.dashboard');
 
-        /*
-        |--------------------------------------------------------------------------
-        | KEGIATAN USER
-        |--------------------------------------------------------------------------
-        */
+        // KEGIATAN USER
         Route::get('/kegiatan', [UserKegiatan::class, 'index'])->name('kegiatan.index');
         Route::get('/kegiatan/{id}', [UserKegiatan::class, 'detail'])->name('kegiatan.detail');
+        Route::post('/kegiatan/{id}/daftar', [UserKegiatan::class, 'daftar'])->name('kegiatan.daftar');
+        Route::post('/kegiatan/{id}/batal', [UserKegiatan::class, 'batal'])->name('kegiatan.batal');
+        Route::get('/kegiatan/{id}/peserta', [UserKegiatan::class, 'peserta'])->name('kegiatan.peserta');
 
-        // Daftar kegiatan (POST)
-        Route::post('/kegiatan/{id}/daftar', [UserKegiatan::class, 'daftar'])
-            ->name('kegiatan.daftar');
-
-        // Batal daftar kegiatan (POST)
-        Route::post('/kegiatan/{id}/batal', [UserKegiatan::class, 'batal'])
-            ->name('kegiatan.batal');
-
-        // Lihat semua peserta kegiatan (GET)
-        Route::get('/kegiatan/{id}/peserta', [UserKegiatan::class, 'peserta'])
-            ->name('kegiatan.peserta');
-
-        /*
-        |--------------------------------------------------------------------------
-        | ABSENSI USER
-        |--------------------------------------------------------------------------
-        */
+        // ABSENSI USER
         Route::get('/absensi', [UserAbsensi::class, 'index'])->name('absensi.index');
 
-        /*
-        |--------------------------------------------------------------------------
-        | RIWAYAT USER
-        |--------------------------------------------------------------------------
-        */
+        // RIWAYAT USER
         Route::get('/riwayat', [UserRiwayat::class, 'index'])->name('riwayat.index');
 
-        /*
-        |--------------------------------------------------------------------------
-        | PROFILE USER
-        |--------------------------------------------------------------------------
-        */
+        // PROFILE USER
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+        
     });
 
-/*
-|--------------------------------------------------------------------------
-| AUTH BREEZE
-|--------------------------------------------------------------------------
-*/
-require __DIR__.'/auth.php';
+
+// BREEZE Auth
+require __DIR__ . '/auth.php';

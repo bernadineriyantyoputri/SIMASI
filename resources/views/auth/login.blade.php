@@ -1,18 +1,6 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | SIMASI</title>
+@extends('layouts.guest')
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- CSS Global -->
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-</head>
-<body class="auth-bg">
-
+@section('content')
 <div class="container-fluid">
     <div class="row vh-100">
 
@@ -24,7 +12,7 @@
         <!-- KANAN: FORM LOGIN -->
         <div class="col-md-6 d-flex justify-content-center align-items-center">
 
-            <div class="card shadow p-4 rounded-4" 
+            <div class="card shadow p-4 rounded-4"
                  style="width: 90%; max-width: 420px; border: none; background: rgba(255,255,255,0.92); backdrop-filter: blur(5px);">
 
                 <div class="text-center mb-4">
@@ -86,6 +74,4 @@
 
     </div>
 </div>
-
-</body>
-</html>
+@endsection

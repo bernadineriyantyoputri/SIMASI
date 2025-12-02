@@ -1,8 +1,8 @@
-@extends('layouts.admin')
+@extends('layouts.app')
 
 @section('content')
-<div class="px-6 py-6">
 
+<div class="pt-2">
     <!-- Judul Halaman -->
     <h1 class="text-2xl font-bold mb-6">Tambah Kegiatan</h1>
 

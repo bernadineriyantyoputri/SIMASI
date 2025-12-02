@@ -30,4 +30,5 @@ public function pendaftaran()
     return $this->hasMany(\App\Models\PesertaKegiatan::class);
 }
 
+
 }
