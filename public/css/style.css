@@ -1,20 +1,16 @@
-/* =========================
-   Body & Auth Background
-========================= */
+/* ===== Body & Auth ===== */
 body {
     min-height: 100vh;
     margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f9fafb; /* default admin background */
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9fafb;
 }
 
 .auth-bg {
     background: url('../images/unila.jpg') center/cover no-repeat fixed;
 }
 
-/* =========================
-   Sidebar
-========================= */
+/* ===== Sidebar ===== */
 .sidebar {
     width: 240px;
     background: #fff;
@@ -50,16 +46,9 @@ body {
     margin-top: 2px;
 }
 
-.sidebar-link-text span {
-    display: block;
-    line-height: 1.1;
-}
-
-/* =========================
-   Topbar
-========================= */
+/* ===== Topbar ===== */
 .topbar {
-    background-color: #ffffff;
+    background-color: #fff;
     border-bottom: 1px solid #e5e7eb;
     height: 60px;
     display: flex;
@@ -68,9 +57,7 @@ body {
     padding: 0.75rem 2rem;
 }
 
-/* =========================
-   Content
-========================= */
+/* ===== Content Layout ===== */
 .layout-wrapper {
     min-height: 100vh;
     display: flex;
@@ -81,50 +68,7 @@ body {
     padding: 1.5rem 2rem;
 }
 
-/* =========================
-   Card Kegiatan & Badge
-========================= */
-.card-activity {
-    border-radius: 16px;
-    background: #fff;
-    padding: 20px;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-}
-
-.status-badge {
-    font-size: 0.75rem;
-    padding: 2px 10px;
-    border-radius: 12px;
-    color: #fff;
-}
-
-.status-done {
-    background-color: #e5e5e5;
-    color: #333;
-}
-
-.avatar-sm {
-    width: 28px;
-    height: 28px;
-    background: #e0e7ff;
-    color: #1e3a8a;
-    font-weight: 600;
-    border-radius: 50%;
-    font-size: 0.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.btn-round {
-    border-radius: 10px;
-    font-size: 0.8rem;
-}
-
-/* =========================
-   Table & Footer
-========================= */
+/* ===== Tables & Footer ===== */
 .table-responsive {
     max-height: 500px;
     overflow-y: auto;
@@ -138,118 +82,40 @@ footer {
     background-color: #f8f9fa;
 }
 
-/* =========================
-   Responsive
-========================= */
-@media (max-width: 768px) {
-    .sidebar {
-        display: none;
-    }
-}
-
-.kegiatan-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-    gap: 25px;
-    padding-bottom: 40px;
-}
-
-.kegiatan-card {
+/* ===== Cards Kegiatan ===== */
+.card-kegiatan {
     background: #fff;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.12);
-    padding-bottom: 15px;
-    transition: .2s;
+    border-radius: 25px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: visible;
 }
 
-.kegiatan-card img {
+.card-img-wrapper {
+    overflow: hidden;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+}
+
+.card-kegiatan-img {
     width: 100%;
-    height: 220px;
+    height: 280px;
     object-fit: cover;
 }
 
-.kegiatan-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 7px 18px rgba(0,0,0,0.18);
+.card-kegiatan-body {
+    padding: 30px;
+    padding-bottom: 60px;
+    position: relative;
+    z-index: 10;
 }
 
-.keg-title {
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.keg-desc {
-    margin-top: 4px;
-    color: #666;
-    font-size: 14px;
-}
-
-.keg-info {
-    margin-top: 12px;
-    color: #444;
-    font-size: 14px;
-    line-height: 1.4;
-}
-
-.keg-btn {
-    margin-top: 18px;
-    display: block;
-    width: 100%;
-    background: #4C7CFF;
-    padding: 10px;
-    text-align: center;
-    color: white;
-    font-weight: 600;
-    border-radius: 10px;
-    transition: .2s;
-}
-
-.keg-btn:hover {
-    background: #325DE8;
-}
-
-/* Wrapper */
-.kegiatan-wrapper {
-    padding: 40px 50px;
-    padding-left: 20px !important;  /* geser lebih ke kiri */
-}
-
-/* Title */
-.page-title {
+.kegiatan-title {
     font-size: 28px;
-    font-weight: 800;
+    font-weight: 700;
+    margin-bottom: 4px;
 }
 
-.page-subtitle {
-    color: #6b7280;
-    margin-top: -5px;
-    margin-bottom: 25px;
-}
-
-/* Grid */
-.kegiatan-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 25px;
-}
-
-/* Card */
-.kegiatan-card {
-    background: #ffffff;
-    border-radius: 14px;
-    overflow: hidden;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-    transition: 0.2s;
-}
-
-.kegiatan-card:hover {
-    transform: translateY(-4px);
-}
-
-
-/* Text */
 .keg-title {
     font-size: 18px;
     font-weight: 700;
@@ -265,108 +131,42 @@ footer {
     margin-bottom: 3px;
 }
 
-/* Button */
-.keg-btn {
-    display: inline-block;
-    padding: 7px 16px;
-    background: #2563eb;
-    color: white;
-    border-radius: 8px;
-    text-decoration: none;
-    font-size: 14px;
-}
-
-.keg-btn:hover {
-    background: #1e40af;
-}
-
-.kegiatan-title {
-    font-size: 28px;    /* lebih besar */
-    font-weight: 700;   /* bold */
-    margin-bottom: 4px;
-}
-
-body {
-    font-family: 'Inter', sans-serif !important; 
-}
-
+/* ===== Tombol ===== */
+.btn-daftar,
+.keg-btn,
 .btn-detail {
     display: inline-block;
-    margin-top: 16px;
-    padding: 8px 16px;
-    background-color: #1D4ED8;
-    color: white;
-    font-weight: bold;
-    border-radius: 8px;
-    text-decoration: none;
-    transition: background-color 0.3s;
-}
-
-.btn-detail:hover {
-    background-color: #2563EB; /* lebih gelap saat hover */
-}
-
-.kegiatan-img {
-    width: auto;
-    max-width: 250px;
-    height: 160px;
-    object-fit: cover;
-}
-
-.card-kegiatan {
-    background: white;
-    border-radius: 25px;
-    overflow: hidden; /* tambahkan overflow: visible nanti untuk tombol */
-    border: 1px solid #e5e7eb; /* gray-200 */
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-/* Bagian gambar */
-.card-kegiatan-img {
-    width: 100%;
-    height: 280px;
-    object-fit: cover;
-    display: block;
-}
-
-/* Wrapper gambar agar ikut melengkung atas */
-.card-img-wrapper {
-    overflow: hidden;
-    border-top-left-radius: 25px;
-    border-top-right-radius: 25px;
-}
-
-/* Bagian dalam card */
-.card-kegiatan-body {
-    padding: 30px;
-    padding-bottom: 60px; /* ditambah supaya tombol tidak terpotong */
-    border-bottom-left-radius: 25px;
-    border-bottom-right-radius: 25px;
-    position: relative; /* ditambah supaya z-index bekerja */
-    z-index: 10;
-}
-
-/* =========================
-   Tombol Daftar Kegiatan
-========================= */
-.btn-daftar {
-    display: inline-block;
-    margin-top: 20px;
     padding: 10px 20px;
-    background-color: #2563EB;
+    background-color: #2563eb;
     color: white;
-    font-weight: 600;
-    border-radius: 12px;
+    border-radius: 10px;
     text-decoration: none;
-    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
     transition: background-color 0.3s;
 }
 
-.btn-daftar:hover {
-    background-color: #1E40AF;
+.btn-daftar:hover,
+.keg-btn:hover,
+.btn-detail:hover {
+    background-color: #1e40af;
 }
 
-/* Tambahan untuk card agar tombol muncul penuh */
-.card-kegiatan {
-    overflow: visible;
+/* ===== Grid Kegiatan ===== */
+.kegiatan-wrapper {
+    padding: 40px 50px;
+    padding-left: 20px !important;
+}
+
+.kegiatan-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 25px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    .sidebar {
+        display: none;
+    }
 }
