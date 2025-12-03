@@ -47,14 +47,17 @@ Route::middleware(['auth', 'admin'])
     ->group(function () {
 
         Route::get('/', [AdminController::class, 'index'])->name('dashboard');
-        Route::get('kegiatan/{id}/peserta', [AdminKegiatan::class, 'peserta'])->name('kegiatan.peserta');
 
-        Route::resource('user', PenggunaController::class);
+        Route::get('kegiatan/{id}/peserta', [AdminKegiatan::class, 'peserta'])
+            ->name('kegiatan.peserta');
+
+        // Gunakan resource pengguna
+        Route::resource('pengguna', PenggunaController::class);
+
         Route::resource('kegiatan', AdminKegiatan::class);
         Route::resource('absensi', AdminAbsensi::class);
         Route::resource('kas', AdminKas::class);
     });
-
 
 
 /*
@@ -63,34 +66,29 @@ Route::middleware(['auth', 'admin'])
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'verified'])
-    ->name('user.')
     ->group(function () {
 
         Route::get('/dashboard', function () {
             return redirect()->route('user.kegiatan.index');
         })->name('user.dashboard');
 
-        // KEGIATAN USER
-        Route::get('/kegiatan', [UserKegiatan::class, 'index'])->name('kegiatan.index');
-        Route::get('/kegiatan/{id}', [UserKegiatan::class, 'detail'])->name('kegiatan.detail');
-        Route::post('/kegiatan/{id}/daftar', [UserKegiatan::class, 'daftar'])->name('kegiatan.daftar');
-        Route::post('/kegiatan/{id}/batal', [UserKegiatan::class, 'batal'])->name('kegiatan.batal');
-        Route::get('/kegiatan/{id}/peserta', [UserKegiatan::class, 'peserta'])->name('kegiatan.peserta');
+        // USER FEATURE
+        Route::prefix('user')->name('user.')->group(function () {
+            Route::get('/kegiatan', [UserKegiatan::class, 'index'])->name('kegiatan.index');
+            Route::get('/kegiatan/{id}', [UserKegiatan::class, 'detail'])->name('kegiatan.detail');
+            Route::post('/kegiatan/{id}/daftar', [UserKegiatan::class, 'daftar'])->name('kegiatan.daftar');
+            Route::post('/kegiatan/{id}/batal', [UserKegiatan::class, 'batal'])->name('kegiatan.batal');
+            Route::get('/kegiatan/{id}/peserta', [UserKegiatan::class, 'peserta'])->name('kegiatan.peserta');
 
-        // ABSENSI USER
-        Route::get('/absensi', [UserAbsensi::class, 'index'])->name('absensi.index');
+            Route::get('/absensi', [UserAbsensi::class, 'index'])->name('absensi.index');
+            Route::get('/riwayat', [UserRiwayat::class, 'index'])->name('riwayat.index');
+        });
 
-        // RIWAYAT USER
-        Route::get('/riwayat', [UserRiwayat::class, 'index'])->name('riwayat.index');
-
-        // PROFILE USER
+        // BREEZE PROFILE (JANGAN DIKASIH PREFIX user.)
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-        
     });
-
 
 // BREEZE Auth
 require __DIR__ . '/auth.php';

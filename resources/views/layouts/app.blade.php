@@ -45,12 +45,13 @@
     {{-- NAVBAR USER --}}
     @include('layouts.partials.user_navbar')
 
+
     <main class="pt-20 pb-20 px-4">
         @yield('content')
     </main>
 
     {{-- FOOTER USER --}}
-    @include('layouts.partials.user_footer')
+    @include('layouts.partials.user_buttomnavbar')
 
 @endif
 

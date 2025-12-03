@@ -24,9 +24,17 @@
                 {{ auth()->user()->npm ?? 'NPM Tidak Ada' }}
             </span>
         </div>
+        <a href="{{ route('profile.edit') }}">
+    <img 
+        src="{{ auth()->user()->photo 
+            ? asset('storage/' . auth()->user()->photo) 
+            : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) 
+        }}"
+        class="w-10 h-10 rounded-full border object-cover cursor-pointer hover:opacity-80 transition"
+    />
+</a>
 
-        <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}"
-             class="w-10 h-10 rounded-full border">
+
 
         <form action="{{ route('logout') }}" method="POST">
             @csrf

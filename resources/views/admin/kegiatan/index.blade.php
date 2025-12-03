@@ -58,19 +58,31 @@
 
             <div class="mt-4">
                 <div class="h-2 bg-gray-200 rounded-full">
-                    <div class="h-2 bg-blue-600 rounded-full"
-                         style="width: {{ $persen }}%">
-                    </div>
+                    <div class="h-2 bg-blue-600 rounded-full" style="width: {{ $persen }}%"></div>
                 </div>
             </div>
 
             <!-- ACTIONS -->
-            <div class="flex justify-between mt-5">
-                <a href="{{ route('admin.kegiatan.edit', $item->id) }}"
-                   class="px-4 py-2 border rounded-lg hover:bg-gray-100">
-                    Edit
-                </a>
+            <div class="flex items-center justify-between mt-5">
 
+                <!-- Left Buttons -->
+                <div class="flex items-center gap-2">
+
+                    <!-- EDIT -->
+                    <a href="{{ route('admin.kegiatan.edit', $item->id) }}"
+                       class="px-3 py-2 border rounded-lg hover:bg-gray-100 text-sm">
+                        Edit
+                    </a>
+
+                    <!-- PESERTA -->
+                    <a href="{{ route('admin.kegiatan.peserta', $item->id) }}"
+                       class="px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm">
+                        Peserta
+                    </a>
+
+                </div>
+
+                <!-- DELETE -->
                 <form action="{{ route('admin.kegiatan.destroy', $item->id) }}"
                       method="POST"
                       onsubmit="return confirm('Hapus kegiatan ini?')">
@@ -78,18 +90,11 @@
                     @method('DELETE')
 
                     <button
-                        class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
+                        class="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 text-sm">
                         Hapus
                     </button>
                 </form>
-            </div>
 
-            <!-- LIHAT PESERTA -->
-            <div class="mt-3 text-center">
-                <a href="{{ route('admin.kegiatan.peserta', $item->id) }}"
-                   class="text-blue-600 hover:underline text-sm">
-                    Lihat Daftar Peserta →
-                </a>
             </div>
 
         </div>

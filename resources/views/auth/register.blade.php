@@ -56,6 +56,9 @@
                     <div class="mb-3">
                         <input type="text" name="npm" class="form-control" placeholder="NPM"
                             value="{{ old('npm') }}" required>
+                        @error('npm')
+                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                     
                     <div class="mb-3">

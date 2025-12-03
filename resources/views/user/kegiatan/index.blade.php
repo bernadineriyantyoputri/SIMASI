@@ -39,11 +39,6 @@
                         </div>
 
                         <div class="flex gap-1 items-center">
-                            <i class="fa-regular fa-clock text-[10px]"></i>
-                            {{ $k->waktu }}
-                        </div>
-
-                        <div class="flex gap-1 items-center">
                             <i class="fa-solid fa-location-dot text-[10px]"></i>
                             {{ $k->lokasi }}
                         </div>

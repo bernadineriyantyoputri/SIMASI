@@ -9,7 +9,6 @@
             Daftar Peserta — {{ $kegiatan->judul }}
         </h2>
 
-        <!-- 🔙 TOMBOL KEMBALI -->
         <a href="{{ route('admin.kegiatan.index') }}" 
            class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg shadow">
             ← Kembali
@@ -21,6 +20,7 @@
             <tr class="bg-gray-100">
                 <th class="p-3 border">No</th>
                 <th class="p-3 border">Nama</th>
+                <th class="p-3 border">NPM</th>
                 <th class="p-3 border">Email</th>
                 <th class="p-3 border">Tanggal Daftar</th>
             </tr>
@@ -31,6 +31,7 @@
             <tr>
                 <td class="p-3 border">{{ $index + 1 }}</td>
                 <td class="p-3 border">{{ $p->user->name }}</td>
+                <td class="p-3 border">{{ $p->user->npm ?? '-' }}</td>
                 <td class="p-3 border">{{ $p->user->email }}</td>
                 <td class="p-3 border">{{ $p->created_at->format('d M Y') }}</td>
             </tr>
