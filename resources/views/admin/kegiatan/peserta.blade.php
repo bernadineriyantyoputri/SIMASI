@@ -38,7 +38,7 @@
             @empty
             <tr>
                 <td colspan="4" class="text-center p-3 text-gray-500">
-                    Belum ada peserta yang mendaftar.
+                Belum ada peserta yang mendaftar
                 </td>
             </tr>
             @endforelse

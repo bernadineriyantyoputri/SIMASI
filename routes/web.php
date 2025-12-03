@@ -74,21 +74,30 @@ Route::middleware(['auth', 'verified'])
 
         // USER FEATURE
         Route::prefix('user')->name('user.')->group(function () {
+
+            // KEGIATAN
             Route::get('/kegiatan', [UserKegiatan::class, 'index'])->name('kegiatan.index');
             Route::get('/kegiatan/{id}', [UserKegiatan::class, 'detail'])->name('kegiatan.detail');
+
             Route::post('/kegiatan/{id}/daftar', [UserKegiatan::class, 'daftar'])->name('kegiatan.daftar');
-            Route::post('/kegiatan/{id}/batal', [UserKegiatan::class, 'batal'])->name('kegiatan.batal');
+
+            // FIX: batal harus DELETE
+            Route::delete('/kegiatan/{id}/batal', [UserKegiatan::class, 'batal'])->name('kegiatan.batal');
+
             Route::get('/kegiatan/{id}/peserta', [UserKegiatan::class, 'peserta'])->name('kegiatan.peserta');
 
+            // ABSENSI
             Route::get('/absensi', [UserAbsensi::class, 'index'])->name('absensi.index');
+
+            // RIWAYAT
             Route::get('/riwayat', [UserRiwayat::class, 'index'])->name('riwayat.index');
         });
 
-        // BREEZE PROFILE (JANGAN DIKASIH PREFIX user.)
+        // PROFILE
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
-
+    
 // BREEZE Auth
 require __DIR__ . '/auth.php';

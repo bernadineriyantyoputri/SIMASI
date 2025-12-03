@@ -7,10 +7,9 @@
     <h1 class="text-2xl font-bold mb-1">Daftar Kegiatan</h1>
     <p class="text-gray-600 mb-6">Pilih kegiatan yang ingin kamu ikuti</p>
 
-    <!-- Kontainer di tengah seperti admin -->
+
     <div class="w-full">
 
-        <!-- Grid card kecil (2 kolom) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
             @foreach ($kegiatan as $k)
@@ -37,6 +36,15 @@
                             <i class="fa-regular fa-calendar text-[10px]"></i>
                             {{ \Carbon\Carbon::parse($k->tanggal)->translatedFormat('l, d F Y') }}
                         </div>
+
+                         <div class="flex gap-1 items-center">
+        <i class="fa-regular fa-clock text-[10px]"></i>
+        @if($k->jam)
+            {{ \Carbon\Carbon::parse($k->jam)->format('H:i') }} WIB
+        @else
+            -
+        @endif
+    </div>
 
                         <div class="flex gap-1 items-center">
                             <i class="fa-solid fa-location-dot text-[10px]"></i>

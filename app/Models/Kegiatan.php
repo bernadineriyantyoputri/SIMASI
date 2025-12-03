@@ -15,6 +15,7 @@ class Kegiatan extends Model
         'judul',
         'deskripsi',
         'tanggal',
+        'jam',
         'lokasi',
         'gambar',
         'kuota',

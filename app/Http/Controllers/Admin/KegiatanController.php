@@ -11,8 +11,9 @@ class KegiatanController extends Controller
 {
     public function index() {
         $kegiatan = Kegiatan::withCount('peserta')
-        ->orderBy('tanggal', 'desc')
-        ->get();
+            ->orderBy('tanggal', 'desc')
+            ->get();
+
         return view('admin.kegiatan.index', compact('kegiatan'));
     }
 
@@ -24,6 +25,7 @@ class KegiatanController extends Controller
         $request->validate([
             'nama_kegiatan' => 'required|string|max:255',
             'tanggal' => 'required|date',
+            'jam' => 'nullable',
             'lokasi' => 'required|string|max:255',
             'deskripsi' => 'required|string',
             'kuota' => 'required|integer|min:1',
@@ -39,13 +41,13 @@ class KegiatanController extends Controller
         Kegiatan::create([
             'judul' => $request->nama_kegiatan,
             'tanggal' => $request->tanggal,
+            'jam' => $request->jam,
             'lokasi' => $request->lokasi,
             'deskripsi' => $request->deskripsi,
             'kuota' => $request->kuota,
             'gambar' => $gambarPath,
-            'user_id' => auth()->id(), // hubungkan dengan user yang login
+            'user_id' => auth()->id(),
         ]);
-
 
         return redirect()->route('admin.kegiatan.index')
             ->with('success', 'Kegiatan berhasil ditambahkan');
@@ -59,28 +61,30 @@ class KegiatanController extends Controller
         $request->validate([
             'nama_kegiatan' => 'required|string|max:255',
             'tanggal' => 'required|date',
+            'jam' => 'nullable',
             'lokasi' => 'required|string|max:255',
             'deskripsi' => 'required|string',
             'kuota' => 'required|integer|min:1',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        // Upload gambar baru jika ada
+        // Upload gambar baru (kalau ada)
         if ($request->hasFile('gambar')) {
 
-            // Hapus gambar lama jika ada
+            // hapus file lama
             if ($kegiatan->gambar && Storage::disk('public')->exists($kegiatan->gambar)) {
                 Storage::disk('public')->delete($kegiatan->gambar);
             }
 
             $gambarPath = $request->file('gambar')->store('kegiatan', 'public');
         } else {
-            $gambarPath = $kegiatan->gambar; // tetap pakai gambar lama
+            $gambarPath = $kegiatan->gambar;
         }
 
         $kegiatan->update([
             'judul' => $request->nama_kegiatan,
             'tanggal' => $request->tanggal,
+            'jam' => $request->jam,
             'lokasi' => $request->lokasi,
             'deskripsi' => $request->deskripsi,
             'kuota' => $request->kuota,
@@ -93,41 +97,36 @@ class KegiatanController extends Controller
 
     public function destroy(Kegiatan $kegiatan) {
 
-        // Hapus file gambarnya dari storage
         if ($kegiatan->gambar && Storage::disk('public')->exists($kegiatan->gambar)) {
             Storage::disk('public')->delete($kegiatan->gambar);
         }
 
-        // Hapus data kegiatan
         $kegiatan->delete();
 
         return redirect()->route('admin.kegiatan.index')
             ->with('success', 'Kegiatan berhasil dihapus');
     }
 
-      public function show($id)
-{
-    $kegiatan = Kegiatan::find($id);
+    public function show($id)
+    {
+        $kegiatan = Kegiatan::find($id);
 
-    if (!$kegiatan) {
-        abort(404); // jika kegiatan tidak ditemukan
+        if (!$kegiatan) {
+            abort(404);
+        }
+
+        $jumlahPeserta = $kegiatan->peserta()->count();
+
+        return view('admin.kegiatan.show', compact('kegiatan', 'jumlahPeserta'));
     }
 
-    // Hitung jumlah peserta
-    $jumlahPeserta = $kegiatan->peserta()->count();
+    public function peserta($id)
+    {
+        $kegiatan = Kegiatan::findOrFail($id);
+        $peserta = \App\Models\PesertaKegiatan::where('kegiatan_id', $id)
+            ->with('user')
+            ->get();
 
-    return view('admin.kegiatan.show', compact('kegiatan', 'jumlahPeserta'));
+        return view('admin.kegiatan.peserta', compact('kegiatan', 'peserta'));
+    }
 }
-
-public function peserta($id)
-{
-    $kegiatan = Kegiatan::findOrFail($id);
-    $peserta = \App\Models\PesertaKegiatan::where('kegiatan_id', $id)
-                ->with('user')
-                ->get();
-
-    return view('admin.kegiatan.peserta', compact('kegiatan', 'peserta'));
-}
-
-}
-

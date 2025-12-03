@@ -10,9 +10,7 @@ use App\Models\PesertaKegiatan;
 
 class KegiatanController extends Controller
 {
-    /**
-     * Tampilkan semua kegiatan (include jumlah peserta).
-     */
+
     public function index()
     {
         $kegiatan = Kegiatan::withCount('peserta')
@@ -22,22 +20,21 @@ class KegiatanController extends Controller
         return view('user.kegiatan.index', compact('kegiatan'));
     }
 
-    /**
-     * Detail kegiatan (include jumlah peserta).
-     */
     public function detail($id)
     {
         $kegiatan = Kegiatan::withCount('peserta')->findOrFail($id);
 
+        $isRegistered = PesertaKegiatan::where('kegiatan_id', $id)
+        ->where('user_id', Auth::id())
+        ->exists();
+
         return view('user.kegiatan.detail', [
             'kegiatan' => $kegiatan,
-            'jumlahPeserta' => $kegiatan->peserta_count
+            'jumlahPeserta' => $kegiatan->peserta_count,
+            'isRegistered' => $isRegistered
         ]);
     }
 
-    /**
-     * Daftar kegiatan (cek kuota dan sudah daftar).
-     */
     public function daftar(Request $request, $id)
     {
         $kegiatan = Kegiatan::withCount('peserta')->findOrFail($id);
@@ -62,9 +59,6 @@ class KegiatanController extends Controller
         return back()->with('success', 'Berhasil mendaftar kegiatan!');
     }
 
-    /**
-     * Batalkan pendaftaran.
-     */
     public function batal(Request $request, $id)
     {
         $userId = Auth::id();
@@ -82,9 +76,6 @@ class KegiatanController extends Controller
         return back()->with('success', 'Pendaftaran berhasil dibatalkan.');
     }
 
-    /**
-     * Lihat daftar peserta.
-     */
     public function peserta($id)
     {
         $kegiatan = Kegiatan::findOrFail($id);
