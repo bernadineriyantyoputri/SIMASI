@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('absensi', function (Blueprint $table) {
-            $table->integer('jumlah_peserta')->default(0)->after('status');
-        });
+        // Kolom jumlah_peserta sekarang sudah dibuat di create_absensi_table,
+        // jadi migration ini tidak perlu melakukan apa-apa.
+        // Schema::table('absensi', function (Blueprint $table) {
+        //     $table->integer('jumlah_peserta')->default(0);
+        // });
     }
 
     /**
@@ -21,8 +23,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('absensi', function (Blueprint $table) {
-            $table->dropColumn('jumlah_peserta');
-        });
+        // Karena kolom ini tidak ditambahkan di up(), tidak perlu di-drop di sini.
+        // Schema::table('absensi', function (Blueprint $table) {
+        //     $table->dropColumn('jumlah_peserta');
+        // });
     }
 };

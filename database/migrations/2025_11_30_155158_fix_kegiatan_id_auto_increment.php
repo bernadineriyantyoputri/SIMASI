@@ -9,23 +9,21 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
-{
-    Schema::table('kegiatan', function (Blueprint $table) {
-        $table->dropColumn('id');
-    });
+    public function up(): void
+    {
+        // Perbaikan auto increment untuk kolom id di tabel kegiatan
+        // sudah tidak diperlukan lagi karena sekarang kolom id dibuat
+        // dengan $table->id() di migration create_kegiatan_table.
+        //
+        // Jadi migration ini dibiarkan kosong supaya tidak bentrok
+        // dengan foreign key dari tabel absensi.
+    }
 
-    Schema::table('kegiatan', function (Blueprint $table) {
-        $table->bigIncrements('id')->first();
-    });
-}
-
-public function down()
-{
-    Schema::table('kegiatan', function (Blueprint $table) {
-        $table->dropColumn('id');
-        $table->integer('id');
-    });
-}
-
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        // Tidak ada perubahan di up(), jadi tidak perlu rollback apa-apa di sini.
+    }
 };

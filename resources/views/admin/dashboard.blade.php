@@ -22,7 +22,7 @@
       </a>
 
       <div class="d-flex gap-2">
-        <form action="{{ route('admin.logout') }}" method="POST">
+        <form action="{{ route('logout') }}" method="POST">
             @csrf
             <button type="submit" class="btn btn-dark rounded-pill">
                 Logout <i class="bi bi-box-arrow-right ms-1"></i>
@@ -104,7 +104,7 @@
       <div class="row g-3">
         <!-- Manajemen Pengguna -->
         <div class="col-md-6">
-          <a href="{{ route('admin.user.index') }}" class="text-decoration-none text-dark">
+          <a href="{{ route('admin.pengguna.index') }}" class="text-decoration-none text-dark">
             <div class="bg-white rounded-16 border shadow-soft p-4 d-flex gap-3 h-100">
               <div class="bg-primary-subtle text-primary d-inline-flex align-items-center justify-content-center rounded-3" style="width:44px;height:44px;">
                 <i class="bi bi-people"></i>
@@ -169,7 +169,7 @@
         <h5 class="fw-semibold mb-1">Siap Untuk Memulai?</h5>
         <p class="text-white-50 small mb-3">Bergabunglah dengan ratusan UKM yang telah menggunakan sistem kami untuk meningkatkan efisiensi dan transparansi organisasi mereka.</p>
         <a href="{{ route('admin.dashboard') }}" class="btn btn-light rounded-pill px-4">
-          Akses Dashboard <i class="bi bi-arrow-right-short ms-1"></i>
+          Akses Sekarang <i class="bi bi-arrow-right-short ms-1"></i>
         </a>
       </div>
     </div>

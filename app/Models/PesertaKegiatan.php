@@ -7,20 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class PesertaKegiatan extends Model
 {
+    use HasFactory;
+
     protected $table = 'peserta_kegiatan';
 
     protected $fillable = [
         'user_id',
-        'kegiatan_id'
+        'kegiatan_id',
+        'status',      // ⬅️ penting
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
-    
+
     public function kegiatan()
     {
-         return $this->belongsTo(Kegiatan::class, 'kegiatan_id');
+        return $this->belongsTo(Kegiatan::class, 'kegiatan_id');
     }
 }

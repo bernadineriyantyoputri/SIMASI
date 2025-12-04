@@ -3,83 +3,91 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Kegiatan;
 use App\Models\PesertaKegiatan;
+use Illuminate\Http\Request;
 
 class KegiatanController extends Controller
 {
-
+    // ============================
+    // LIST KEGIATAN UNTUK USER
+    // ============================
     public function index()
     {
+        // pakai 'tanggal' (BUKAN tanggal_mulai)
+        // dan withCount('peserta') supaya di Blade bisa pakai $k->peserta_count
         $kegiatan = Kegiatan::withCount('peserta')
-                    ->orderBy('tanggal', 'asc')
-                    ->get();
+            ->orderBy('tanggal', 'desc')
+            ->get();
 
         return view('user.kegiatan.index', compact('kegiatan'));
     }
 
+    // ============================
+    // DETAIL KEGIATAN
+    // ============================
     public function detail($id)
     {
-        $kegiatan = Kegiatan::withCount('peserta')->findOrFail($id);
-
-        $isRegistered = PesertaKegiatan::where('kegiatan_id', $id)
-        ->where('user_id', Auth::id())
-        ->exists();
-
-        return view('user.kegiatan.detail', [
-            'kegiatan' => $kegiatan,
-            'jumlahPeserta' => $kegiatan->peserta_count,
-            'isRegistered' => $isRegistered
-        ]);
-    }
-
-    public function daftar(Request $request, $id)
-    {
-        $kegiatan = Kegiatan::withCount('peserta')->findOrFail($id);
-        $userId = Auth::id();
-
-        // Cek sudah daftar
-        if (PesertaKegiatan::where('kegiatan_id', $id)->where('user_id', $userId)->exists()) {
-            return back()->with('error', 'Anda sudah mendaftar kegiatan ini.');
-        }
-
-        // Cek kuota
-        if ($kegiatan->peserta_count >= $kegiatan->kuota) {
-            return back()->with('error', 'Kuota kegiatan sudah penuh.');
-        }
-
-        // Tambah peserta
-        PesertaKegiatan::create([
-            'kegiatan_id' => $id,
-            'user_id' => $userId,
-        ]);
-
-        return back()->with('success', 'Berhasil mendaftar kegiatan!');
-    }
-
-    public function batal(Request $request, $id)
-    {
-        $userId = Auth::id();
+        $kegiatan = Kegiatan::findOrFail($id);
 
         $peserta = PesertaKegiatan::where('kegiatan_id', $id)
-                    ->where('user_id', $userId)
-                    ->first();
+            ->where('user_id', auth()->id())
+            ->first();
 
-        if (!$peserta) {
-            return back()->with('error', 'Anda belum mendaftar.');
+        return view('user.kegiatan.detail', compact('kegiatan', 'peserta'));
+    }
+
+    // ============================
+    // USER MENDAFTAR KEGIATAN
+    // ============================
+    public function daftar($id)
+    {
+        $kegiatan = Kegiatan::findOrFail($id);
+
+        // Cek apakah user sudah pernah daftar
+        $existing = PesertaKegiatan::where('kegiatan_id', $id)
+            ->where('user_id', auth()->id())
+            ->first();
+
+        if ($existing) {
+            return back()->with('error', 'Kamu sudah mendaftar kegiatan ini.');
         }
+
+        // Simpan sebagai pending
+        PesertaKegiatan::create([
+            'kegiatan_id' => $id,
+            'user_id'     => auth()->id(),
+            'status'      => 'pending',
+        ]);
+
+        return back()->with('success', 'Berhasil mendaftar. Menunggu persetujuan admin.');
+    }
+
+    // ============================
+    // USER MEMBATALKAN PENDAFTARAN
+    // ============================
+    public function batal($id)
+    {
+        $peserta = PesertaKegiatan::where('kegiatan_id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
 
         $peserta->delete();
 
         return back()->with('success', 'Pendaftaran berhasil dibatalkan.');
     }
 
+    // ============================
+    // LIHAT PESERTA YANG DISETUJUI
+    // ============================
     public function peserta($id)
     {
         $kegiatan = Kegiatan::findOrFail($id);
-        $peserta = PesertaKegiatan::where('kegiatan_id', $id)->with('user')->get();
+
+        $peserta = PesertaKegiatan::where('kegiatan_id', $id)
+            ->where('status', 'approved')
+            ->with('user')
+            ->get();
 
         return view('user.kegiatan.peserta', compact('kegiatan', 'peserta'));
     }

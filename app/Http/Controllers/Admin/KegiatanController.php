@@ -5,11 +5,16 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Kegiatan;
+use App\Models\PesertaKegiatan;
 use Illuminate\Support\Facades\Storage;
 
 class KegiatanController extends Controller
 {
-    public function index() {
+    // ============================
+    // INDEX (LIST SEMUA KEGIATAN)
+    // ============================
+    public function index()
+    {
         $kegiatan = Kegiatan::withCount('peserta')
             ->orderBy('tanggal', 'desc')
             ->get();
@@ -17,19 +22,27 @@ class KegiatanController extends Controller
         return view('admin.kegiatan.index', compact('kegiatan'));
     }
 
-    public function create() {
+    // ============================
+    // FORM TAMBAH KEGIATAN
+    // ============================
+    public function create()
+    {
         return view('admin.kegiatan.create');
     }
 
-    public function store(Request $request) {
+    // ============================
+    // PROSES SIMPAN KEGIATAN BARU
+    // ============================
+    public function store(Request $request)
+    {
         $request->validate([
             'nama_kegiatan' => 'required|string|max:255',
-            'tanggal' => 'required|date',
-            'jam' => 'nullable',
-            'lokasi' => 'required|string|max:255',
-            'deskripsi' => 'required|string',
-            'kuota' => 'required|integer|min:1',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'tanggal'       => 'required|date',
+            'jam'           => 'nullable',
+            'lokasi'        => 'required|string|max:255',
+            'deskripsi'     => 'required|string',
+            'kuota'         => 'required|integer|min:1',
+            'gambar'        => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         // Upload gambar
@@ -38,40 +51,49 @@ class KegiatanController extends Controller
             $gambarPath = $request->file('gambar')->store('kegiatan', 'public');
         }
 
+        // Simpan database
         Kegiatan::create([
-            'judul' => $request->nama_kegiatan,
-            'tanggal' => $request->tanggal,
-            'jam' => $request->jam,
-            'lokasi' => $request->lokasi,
+            'judul'     => $request->nama_kegiatan,
+            'tanggal'   => $request->tanggal,
+            'jam'       => $request->jam,
+            'lokasi'    => $request->lokasi,
             'deskripsi' => $request->deskripsi,
-            'kuota' => $request->kuota,
-            'gambar' => $gambarPath,
-            'user_id' => auth()->id(),
+            'kuota'     => $request->kuota,
+            'gambar'    => $gambarPath,
+            'user_id'   => auth()->id(),
         ]);
 
         return redirect()->route('admin.kegiatan.index')
             ->with('success', 'Kegiatan berhasil ditambahkan');
     }
 
-    public function edit(Kegiatan $kegiatan) {
+    // ============================
+    // FORM EDIT KEGIATAN
+    // ============================
+    public function edit(Kegiatan $kegiatan)
+    {
         return view('admin.kegiatan.edit', compact('kegiatan'));
     }
 
-    public function update(Request $request, Kegiatan $kegiatan) {
+    // ============================
+    // PROSES UPDATE KEGIATAN
+    // ============================
+    public function update(Request $request, Kegiatan $kegiatan)
+    {
         $request->validate([
             'nama_kegiatan' => 'required|string|max:255',
-            'tanggal' => 'required|date',
-            'jam' => 'nullable',
-            'lokasi' => 'required|string|max:255',
-            'deskripsi' => 'required|string',
-            'kuota' => 'required|integer|min:1',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'tanggal'       => 'required|date',
+            'jam'           => 'nullable',
+            'lokasi'        => 'required|string|max:255',
+            'deskripsi'     => 'required|string',
+            'kuota'         => 'required|integer|min:1',
+            'gambar'        => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        // Upload gambar baru (kalau ada)
+        // Upload gambar baru jika ada
         if ($request->hasFile('gambar')) {
 
-            // hapus file lama
+            // Hapus file lama
             if ($kegiatan->gambar && Storage::disk('public')->exists($kegiatan->gambar)) {
                 Storage::disk('public')->delete($kegiatan->gambar);
             }
@@ -81,22 +103,26 @@ class KegiatanController extends Controller
             $gambarPath = $kegiatan->gambar;
         }
 
+        // Update database
         $kegiatan->update([
-            'judul' => $request->nama_kegiatan,
-            'tanggal' => $request->tanggal,
-            'jam' => $request->jam,
-            'lokasi' => $request->lokasi,
+            'judul'     => $request->nama_kegiatan,
+            'tanggal'   => $request->tanggal,
+            'jam'       => $request->jam,
+            'lokasi'    => $request->lokasi,
             'deskripsi' => $request->deskripsi,
-            'kuota' => $request->kuota,
-            'gambar' => $gambarPath
+            'kuota'     => $request->kuota,
+            'gambar'    => $gambarPath
         ]);
 
         return redirect()->route('admin.kegiatan.index')
             ->with('success', 'Kegiatan berhasil diupdate');
     }
 
-    public function destroy(Kegiatan $kegiatan) {
-
+    // ============================
+    // DELETE KEGIATAN
+    // ============================
+    public function destroy(Kegiatan $kegiatan)
+    {
         if ($kegiatan->gambar && Storage::disk('public')->exists($kegiatan->gambar)) {
             Storage::disk('public')->delete($kegiatan->gambar);
         }
@@ -107,6 +133,9 @@ class KegiatanController extends Controller
             ->with('success', 'Kegiatan berhasil dihapus');
     }
 
+    // ============================
+    // DETAIL KEGIATAN
+    // ============================
     public function show($id)
     {
         $kegiatan = Kegiatan::find($id);
@@ -120,13 +149,32 @@ class KegiatanController extends Controller
         return view('admin.kegiatan.show', compact('kegiatan', 'jumlahPeserta'));
     }
 
+    // ============================
+    // LIST PESERTA KEGIATAN
+    // ============================
     public function peserta($id)
     {
         $kegiatan = Kegiatan::findOrFail($id);
-        $peserta = \App\Models\PesertaKegiatan::where('kegiatan_id', $id)
+
+        $peserta = PesertaKegiatan::where('kegiatan_id', $id)
             ->with('user')
             ->get();
 
         return view('admin.kegiatan.peserta', compact('kegiatan', 'peserta'));
+    }
+
+    // ============================
+    // ADMIN SETUJUI PESERTA
+    // ============================
+    public function approvePeserta($kegiatanId, $pesertaId)
+    {
+        $peserta = PesertaKegiatan::where('id', $pesertaId)
+            ->where('kegiatan_id', $kegiatanId)
+            ->firstOrFail();
+
+        $peserta->status = 'approved';
+        $peserta->save();
+
+        return back()->with('success', 'Peserta berhasil disetujui.');
     }
 }

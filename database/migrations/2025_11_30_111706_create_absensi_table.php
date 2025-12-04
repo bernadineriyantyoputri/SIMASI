@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('absensi', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('kegiatan_id')->constrained()->onDelete('cascade');
+            $table->foreignId('kegiatan_id')
+                  ->constrained('kegiatan')
+                  ->onDelete('cascade');
             $table->integer('jumlah_peserta');
             $table->date('tanggal');
             $table->string('status')->default('Hadir');

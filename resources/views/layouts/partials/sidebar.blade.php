@@ -4,28 +4,28 @@
         <h2 class="text-lg font-bold mb-4">SIMASI UKM</h2>
 
         {{-- KEGIATAN (PALING ATAS) --}}
-        <a href="/admin/kegiatan"
+        <a href="{{ route('admin.kegiatan.index') }}"
            class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-50 text-gray-700">
             <i class="fa fa-calendar w-5"></i>
             <span>Kegiatan</span>
         </a>
 
         {{-- PENGGUNA --}}
-        <a href="/admin/pengguna"
+        <a href="{{ route('admin.pengguna.index') }}"
            class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-50 text-gray-700">
             <i class="fa fa-users w-5"></i>
             <span>Pengguna</span>
         </a>
 
         {{-- ABSENSI --}}
-        <a href="/admin/absensi"
+        <a href="{{ route('admin.absensi.index') }}"
            class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-50 text-gray-700">
             <i class="fa fa-clipboard-check w-5"></i>
             <span>Absensi</span>
         </a>
 
         {{-- KAS --}}
-        <a href="/admin/kas"
+        <a href="{{ route('admin.kas.index') }}"
            class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-50 text-gray-700">
             <i class="fa fa-wallet w-5"></i>
             <span>Kas</span>

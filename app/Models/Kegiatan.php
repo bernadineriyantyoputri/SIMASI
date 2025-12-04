@@ -15,20 +15,23 @@ class Kegiatan extends Model
         'judul',
         'deskripsi',
         'tanggal',
-        'jam',
         'lokasi',
-        'gambar',
         'kuota',
         'user_id',
+        'gambar',
+        'jam',
     ];
 
+    // Relasi peserta yg SUDAH DISETUJUI (untuk hitung kuota)
     public function peserta()
     {
-        return $this->hasMany(PesertaKegiatan::class, 'kegiatan_id');
+        return $this->hasMany(PesertaKegiatan::class, 'kegiatan_id')
+                    ->where('status', 'approved');
     }
 
-    public function user()
+    // Kalau butuh semua peserta (pending + approved) di tempat lain
+    public function semuaPeserta()
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(PesertaKegiatan::class, 'kegiatan_id');
     }
 }

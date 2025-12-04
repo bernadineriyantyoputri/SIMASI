@@ -11,27 +11,20 @@ class AdminController extends Controller
 {
     public function index()
     {
-        $totalUsers = User::count();
+        $totalUsers    = User::count();
         $totalKegiatan = Kegiatan::count();
+        $totalAbsensi  = Absensi::count();
 
+        // Hitung rate absensi sederhana: berapa rasio data absensi terhadap jumlah kegiatan
         $absensiRate = 0;
-        $totalAbsensi = Absensi::count();
-        $totalPeserta = Absensi::sum('jumlah_peserta');
-        if ($totalPeserta > 0) {
-            $absensiRate = round(($totalAbsensi / $totalPeserta) * 100, 2);
+        if ($totalKegiatan > 0) {
+            $absensiRate = round(($totalAbsensi / $totalKegiatan) * 100, 2);
         }
 
-        // PERBAIKAN DI SINI
-        $kegiatan = Kegiatan::withCount('peserta')
-            ->orderBy('tanggal', 'desc')
-            ->get();
-
-
-        return view('admin.kegiatan.index', compact(
+        return view('admin.dashboard', compact(
             'totalUsers',
             'totalKegiatan',
-            'absensiRate',
-            'kegiatan'
+            'absensiRate'
         ));
     }
 }

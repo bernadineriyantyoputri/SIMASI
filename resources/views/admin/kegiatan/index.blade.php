@@ -22,7 +22,7 @@
 
             <img
                 src="{{ $item->gambar ? asset('storage/' . $item->gambar) : asset('images/no-image.jpg') }}"
-                class="w-full h-40 object-cover rounded-lg mb-4"
+                class="w-full h-60 object-cover rounded-lg mb-4"
             >
 
             <h2 class="text-xl font-bold">{{ $item->judul }}</h2>
