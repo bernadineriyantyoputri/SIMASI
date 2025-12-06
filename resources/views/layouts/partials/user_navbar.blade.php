@@ -1,18 +1,25 @@
 <nav class="fixed top-0 left-0 w-full bg-white border-b border-gray-200 h-16 
             flex items-center justify-between px-6 z-50">
 
-    <!-- LEFT: LOGO + TITLE -->
-    <div class="flex items-center gap-3">
-        <img src="https://img.icons8.com/?size=100&id=61005&format=png"
-             class="w-9 h-9" alt="logo">
+    <div class="w-full px-6 py-3 flex items-center justify-between">
 
-        <div class="flex flex-col leading-none">
-            <span class="font-semibold text-gray-800 text-sm">SIMASI</span>
-            <span class="text-[11px] text-gray-500">Sistem Manajemen dan Absensi UKM</span>
-        </div>
-    </div>
+        <a href="/" class="flex items-center space-x-3">
 
-    <!-- RIGHT: USER INFO -->
+            <img src="{{ asset('images/logo.png') }}"
+                 alt="Logo"
+                 class="w-10 h-10 rounded-lg object-cover">
+
+            <div class="leading-tight">
+                <div class="font-semibold text-gray-800 text-base">
+                    UKM Management System
+                </div>
+                <div class="text-gray-500 text-sm">
+                    Sistem Informasi Manajemen UKM
+                </div>
+            </div>
+
+        </a>
+
     <div class="flex items-center gap-4">
 
         <div class="flex flex-col text-right leading-tight">

@@ -3,46 +3,78 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Kas;
 use Illuminate\Http\Request;
 
 class KasController extends Controller
 {
-    // Tampilkan daftar kas (kosong dulu)
     public function index()
     {
-        return view('admin.kas.index'); // view kosong placeholder
+        $kas = Kas::orderBy('tanggal', 'asc')->get();
+
+        $total_pemasukan   = Kas::where('jenis', 'pemasukan')->sum('nominal');
+        $total_pengeluaran = Kas::where('jenis', 'pengeluaran')->sum('nominal');
+        $saldo             = $total_pemasukan - $total_pengeluaran;
+
+        return view('admin.kas.index', compact(
+            'kas', 'total_pemasukan', 'total_pengeluaran', 'saldo'
+        ));
     }
 
-    // Halaman buat kas baru (kosong)
     public function create()
     {
-        return view('admin.kas.create'); // nanti dibuat view create.blade.php
+        return view('admin.kas.create');
     }
 
-    // Simpan kas baru (belum dipakai)
     public function store(Request $request)
     {
-        // kosong dulu
-        return redirect()->route('admin.kas.index');
+        $request->validate([
+            'tanggal'    => 'required|date',
+            'jenis'      => 'required|in:pemasukan,pengeluaran',
+            'kategori'   => 'required|string|max:100',
+            'keterangan' => 'required|string',
+            'nominal'    => 'required|integer|min:0',
+        ]);
+
+        Kas::create($request->only([
+            'tanggal', 'jenis', 'kategori', 'keterangan', 'nominal'
+        ]));
+
+        return redirect()->route('admin.kas.index')
+                         ->with('success', 'Data berhasil ditambahkan');
     }
 
-    // Halaman edit kas (kosong)
     public function edit($id)
     {
-        return view('admin.kas.edit', compact('id')); // view edit.blade.php
+        $kas = Kas::findOrFail($id);
+        return view('admin.kas.edit', compact('kas'));
     }
 
-    // Update kas (belum dipakai)
     public function update(Request $request, $id)
     {
-        // kosong dulu
-        return redirect()->route('admin.kas.index');
+        $kas = Kas::findOrFail($id);
+
+        $request->validate([
+            'tanggal'    => 'required|date',
+            'jenis'      => 'required|in:pemasukan,pengeluaran',
+            'kategori'   => 'required|string|max:100',
+            'keterangan' => 'required|string',
+            'nominal'    => 'required|integer|min:0',
+        ]);
+
+        $kas->update($request->only([
+            'tanggal', 'jenis', 'kategori', 'keterangan', 'nominal'
+        ]));
+
+        return redirect()->route('admin.kas.index')
+                         ->with('success', 'Data berhasil diperbarui');
     }
 
-    // Hapus kas (belum dipakai)
     public function destroy($id)
     {
-        // kosong dulu
-        return redirect()->route('admin.kas.index');
+        Kas::findOrFail($id)->delete();
+
+        return redirect()->route('admin.kas.index')
+                         ->with('success', 'Data berhasil dihapus');
     }
 }

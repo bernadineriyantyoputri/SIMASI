@@ -1,44 +1,49 @@
-<aside class="fixed left-0 top-0 w-64 h-full bg-white border-r border-gray-200 p-6 flex flex-col justify-between">
+<aside class="fixed left-0 top-16 w-64 h-[calc(100%-4rem)] bg-white border-r border-gray-200 
+             px-6 pt-6 pb-6 flex flex-col justify-between overflow-y-auto">
 
-    <div class="space-y-3">
-        <h2 class="text-lg font-bold mb-4">SIMASI UKM</h2>
+    <div class="space-y-2">
 
-        {{-- KEGIATAN (PALING ATAS) --}}
+        {{-- DASHBOARD --}}
+        <a href="{{ route('admin.dashboard') }}"
+           class="flex items-center gap-3 p-3 rounded-xl 
+           {{ request()->routeIs('admin.dashboard') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-700 hover:bg-blue-50' }}">
+            <i class="fa fa-home w-5"></i>
+            <span>Dashboard</span>
+        </a>
+
+        {{-- KEGIATAN --}}
         <a href="{{ route('admin.kegiatan.index') }}"
-           class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-50 text-gray-700">
+           class="flex items-center gap-3 p-3 rounded-xl
+           {{ request()->routeIs('admin.kegiatan.*') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-700 hover:bg-blue-50' }}">
             <i class="fa fa-calendar w-5"></i>
             <span>Kegiatan</span>
         </a>
 
         {{-- PENGGUNA --}}
         <a href="{{ route('admin.pengguna.index') }}"
-           class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-50 text-gray-700">
+           class="flex items-center gap-3 p-3 rounded-xl
+           {{ request()->routeIs('admin.pengguna.*') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-700 hover:bg-blue-50' }}">
             <i class="fa fa-users w-5"></i>
             <span>Pengguna</span>
         </a>
 
         {{-- ABSENSI --}}
         <a href="{{ route('admin.absensi.index') }}"
-           class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-50 text-gray-700">
+           class="flex items-center gap-3 p-3 rounded-xl
+           {{ request()->routeIs('admin.absensi.*') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-700 hover:bg-blue-50' }}">
             <i class="fa fa-clipboard-check w-5"></i>
             <span>Absensi</span>
         </a>
 
         {{-- KAS --}}
         <a href="{{ route('admin.kas.index') }}"
-           class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-50 text-gray-700">
+           class="flex items-center gap-3 p-3 rounded-xl
+           {{ request()->routeIs('admin.kas.*') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-700 hover:bg-blue-50' }}">
             <i class="fa fa-wallet w-5"></i>
             <span>Kas</span>
         </a>
+
     </div>
 
-    <form action="{{ route('logout') }}" method="POST" class="mt-6">
-        @csrf
-        <button type="submit"
-                class="w-full flex items-center gap-3 p-3 text-red-600 hover:bg-red-50 rounded-xl font-medium">
-            <i class="fa fa-right-from-bracket w-5"></i>
-            Logout
-        </button>
-    </form>
 
 </aside>
