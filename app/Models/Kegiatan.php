@@ -22,16 +22,28 @@ class Kegiatan extends Model
         'jam',
     ];
 
-    // Relasi peserta yg SUDAH DISETUJUI (untuk hitung kuota)
+    /**
+     * Semua peserta yang mendaftar (pending, approved, rejected)
+     */
     public function peserta()
+    {
+        return $this->hasMany(PesertaKegiatan::class, 'kegiatan_id');
+    }
+
+    /**
+     * Peserta yang sudah disetujui admin
+     */
+    public function pesertaDisetujui()
     {
         return $this->hasMany(PesertaKegiatan::class, 'kegiatan_id')
                     ->where('status', 'approved');
     }
 
-    // Kalau butuh semua peserta (pending + approved) di tempat lain
-    public function semuaPeserta()
+    /**
+     * Relasi ke tabel absensi
+     */
+    public function absensi()
     {
-        return $this->hasMany(PesertaKegiatan::class, 'kegiatan_id');
+        return $this->hasMany(Absensi::class, 'kegiatan_id');
     }
 }

@@ -21,24 +21,24 @@
         </div>
     @endif
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div class="bg-white border shadow-sm rounded-xl p-6 text-center">
-            <h2 class="text-lg font-semibold mb-2">Total Pemasukan</h2>
-            <p class="text-xl font-bold text-green-700">
+    <div class="flex flex-col md:flex-row gap-4 mb-6">
+        <div class="flex-1 bg-green-100 rounded-xl p-6 text-center">
+            <h2 class="text-lg font-semibold text-green-700 mb-2">Total Pemasukan</h2>
+            <p class="text-xl font-bold text-green-800">
                 Rp {{ number_format($total_pemasukan, 0, ',', '.') }}
             </p>
         </div>
 
-        <div class="bg-white border shadow-sm rounded-xl p-6 text-center">
-            <h2 class="text-lg font-semibold mb-2">Total Pengeluaran</h2>
-            <p class="text-xl font-bold text-red-700">
+        <div class="flex-1 bg-red-100 rounded-xl p-6 text-center">
+            <h2 class="text-lg font-semibold text-red-700 mb-2">Total Pengeluaran</h2>
+            <p class="text-xl font-bold text-red-800">
                 Rp {{ number_format($total_pengeluaran, 0, ',', '.') }}
             </p>
         </div>
 
-        <div class="bg-white border shadow-sm rounded-xl p-6 text-center">
-            <h2 class="text-lg font-semibold mb-2">Saldo</h2>
-            <p class="text-xl font-bold text-blue-700">
+        <div class="flex-1 bg-blue-100 rounded-xl p-6 text-center">
+            <h2 class="text-lg font-semibold text-blue-700 mb-2">Saldo</h2>
+            <p class="text-xl font-bold text-blue-800">
                 Rp {{ number_format($saldo, 0, ',', '.') }}
             </p>
         </div>

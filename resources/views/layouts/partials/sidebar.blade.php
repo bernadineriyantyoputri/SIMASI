@@ -3,7 +3,6 @@
 
     <div class="space-y-2">
 
-        {{-- DASHBOARD --}}
         <a href="{{ route('admin.dashboard') }}"
            class="flex items-center gap-3 p-3 rounded-xl 
            {{ request()->routeIs('admin.dashboard') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-700 hover:bg-blue-50' }}">
@@ -11,7 +10,6 @@
             <span>Dashboard</span>
         </a>
 
-        {{-- KEGIATAN --}}
         <a href="{{ route('admin.kegiatan.index') }}"
            class="flex items-center gap-3 p-3 rounded-xl
            {{ request()->routeIs('admin.kegiatan.*') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-700 hover:bg-blue-50' }}">
@@ -19,7 +17,6 @@
             <span>Kegiatan</span>
         </a>
 
-        {{-- PENGGUNA --}}
         <a href="{{ route('admin.pengguna.index') }}"
            class="flex items-center gap-3 p-3 rounded-xl
            {{ request()->routeIs('admin.pengguna.*') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-700 hover:bg-blue-50' }}">
@@ -27,7 +24,6 @@
             <span>Pengguna</span>
         </a>
 
-        {{-- ABSENSI --}}
         <a href="{{ route('admin.absensi.index') }}"
            class="flex items-center gap-3 p-3 rounded-xl
            {{ request()->routeIs('admin.absensi.*') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-700 hover:bg-blue-50' }}">
@@ -35,7 +31,6 @@
             <span>Absensi</span>
         </a>
 
-        {{-- KAS --}}
         <a href="{{ route('admin.kas.index') }}"
            class="flex items-center gap-3 p-3 rounded-xl
            {{ request()->routeIs('admin.kas.*') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-700 hover:bg-blue-50' }}">

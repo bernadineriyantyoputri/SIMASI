@@ -54,7 +54,9 @@ class User extends Authenticatable
     }
 
     public function kegiatanDiikuti()
-{
-    return $this->hasMany(\App\Models\PesertaKegiatan::class, 'user_id');
-}
+    {
+        return $this->hasMany(\App\Models\PesertaKegiatan::class, 'user_id');
+    }
+
+    
 }

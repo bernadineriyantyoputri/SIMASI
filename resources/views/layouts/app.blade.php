@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <title>{{ config('app.name', 'Laravel') }}</title>
@@ -39,12 +40,11 @@
 
     @include('layouts.partials.footer')
 
-
 @else
 
     @include('layouts.partials.user_navbar')
 
-    <main class="flex-1 pt-20 pb-20 px-4">
+    <main class="flex-1 px-4 pt-20 pb-20">
         @yield('content')
     </main>
 

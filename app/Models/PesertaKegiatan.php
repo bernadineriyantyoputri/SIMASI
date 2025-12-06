@@ -14,7 +14,7 @@ class PesertaKegiatan extends Model
     protected $fillable = [
         'user_id',
         'kegiatan_id',
-        'status',      // ⬅️ penting
+        'status',
     ];
 
     public function user()
