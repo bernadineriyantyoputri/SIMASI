@@ -4,72 +4,80 @@
 
 <div class="p-6 bg-white rounded-xl shadow">
 
-    <h2 class="text-2xl font-bold mb-6">Profil Saya</h2>
-
-    {{-- Flash message --}}
-    @if (session('status') === 'profile-updated')
-        <div class="p-3 mb-4 bg-green-100 text-green-700 rounded">
-            Profil berhasil diperbarui.
-        </div>
-    @endif
+    <h2 class="text-2xl font-bold mb-6">Edit Profil</h2>
 
     <form method="POST" action="{{ route('profile.update') }}" 
-          enctype="multipart/form-data" 
-          class="space-y-4">
+          enctype="multipart/form-data" class="space-y-6">
         @csrf
         @method('PATCH')
 
-        {{-- Nama --}}
+        {{-- NAMA --}}
         <div>
-            <label class="block font-semibold mb-1">Nama</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                Nama
+            </label>
             <input type="text" name="name"
-                   value="{{ old('name', $user->name) }}"
-                   class="w-full border px-3 py-2 rounded-lg" required>
+                   class="w-full border rounded-lg px-3 py-2"
+                   value="{{ old('name', $user->name) }}">
+            @error('name')
+                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
-        {{-- Email --}}
+        {{-- EMAIL --}}
         <div>
-            <label class="block font-semibold mb-1">Email</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                Email
+            </label>
             <input type="email" name="email"
-                   value="{{ old('email', $user->email) }}"
-                   class="w-full border px-3 py-2 rounded-lg" required>
+                   class="w-full border rounded-lg px-3 py-2"
+                   value="{{ old('email', $user->email) }}">
+            @error('email')
+                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
         {{-- NPM --}}
         <div>
-            <label class="block font-semibold mb-1">NPM</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                NPM
+            </label>
             <input type="text" name="npm"
-                   value="{{ old('npm', $user->npm) }}"
-                   class="w-full border px-3 py-2 rounded-lg">
+                   class="w-full border rounded-lg px-3 py-2"
+                   value="{{ old('npm', $user->npm) }}">
             @error('npm')
-            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
             @enderror
         </div>
 
-        {{-- Foto Profil --}}
+        {{-- FOTO PROFIL --}}
         <div>
-            <label class="block font-semibold mb-1">Foto Profil</label>
-
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                Foto Profil
+            </label>
             <input type="file" name="photo"
-                   class="w-full border px-3 py-2 rounded-lg">
+                   class="w-full border rounded-lg px-3 py-2 bg-white">
+            @error('photo')
+                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+            @enderror
 
             @if ($user->photo)
-                <img src="{{ asset('storage/' . $user->photo) }}"
-                     class="w-20 h-20 rounded-full mt-2 object-cover border">
-            @else
-                <img src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}"
-                     class="w-20 h-20 rounded-full mt-2 object-cover border">
+                <div class="mt-3">
+                    <p class="text-xs text-gray-500 mb-1">Foto saat ini:</p>
+                    <img src="{{ asset('storage/'.$user->photo) }}"
+                         class="w-20 h-20 rounded-full object-cover border">
+                </div>
             @endif
         </div>
 
-        {{-- Tombol --}}
-        <div class="flex items-center gap-3 mt-4">
-            <a href="{{ route('user.kegiatan.index') }}"
+        {{-- TOMBOL --}}
+        <div class="flex items-center justify-between pt-4 border-t">
+            <a href="{{ route('profile.show') }}"
                class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400">
                 Kembali
             </a>
 
-            <button class="px-4 py-2 bg-blue-600 text-white rounded-lg">
+            <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
                 Simpan Perubahan
             </button>
         </div>

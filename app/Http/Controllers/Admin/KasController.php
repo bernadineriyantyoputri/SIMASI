@@ -28,17 +28,35 @@ class KasController extends Controller
 
     public function store(Request $request)
     {
+        // 1. VALIDASI INPUT (nominal jadi string dulu)
         $request->validate([
             'tanggal'    => 'required|date',
             'jenis'      => 'required|in:pemasukan,pengeluaran',
             'kategori'   => 'required|string|max:100',
             'keterangan' => 'required|string',
-            'nominal'    => 'required|integer|min:0',
+            'nominal'    => 'required',   // jangan integer di sini
         ]);
 
-        Kas::create($request->only([
-            'tanggal', 'jenis', 'kategori', 'keterangan', 'nominal'
-        ]));
+        // 2. BERSIHKAN NOMINAL: buang titik, koma, spasi, dll → ambil hanya angka
+        $rawNominal = $request->nominal;
+        $cleanNominal = preg_replace('/[^0-9]/', '', (string) $rawNominal);
+
+        if ($cleanNominal === '' || !ctype_digit($cleanNominal)) {
+            return back()
+                ->withErrors(['nominal' => 'Nominal tidak valid.'])
+                ->withInput();
+        }
+
+        $nominalInt = (int) $cleanNominal;
+
+        // 3. SIMPAN KE DATABASE
+        Kas::create([
+            'tanggal'    => $request->tanggal,
+            'jenis'      => $request->jenis,
+            'kategori'   => $request->kategori,
+            'keterangan' => $request->keterangan,
+            'nominal'    => $nominalInt,
+        ]);
 
         return redirect()->route('admin.kas.index')
                          ->with('success', 'Data berhasil ditambahkan');
@@ -54,17 +72,35 @@ class KasController extends Controller
     {
         $kas = Kas::findOrFail($id);
 
+        // 1. VALIDASI
         $request->validate([
             'tanggal'    => 'required|date',
             'jenis'      => 'required|in:pemasukan,pengeluaran',
             'kategori'   => 'required|string|max:100',
             'keterangan' => 'required|string',
-            'nominal'    => 'required|integer|min:0',
+            'nominal'    => 'required',
         ]);
 
-        $kas->update($request->only([
-            'tanggal', 'jenis', 'kategori', 'keterangan', 'nominal'
-        ]));
+        // 2. BERSIHKAN NOMINAL
+        $rawNominal = $request->nominal;
+        $cleanNominal = preg_replace('/[^0-9]/', '', (string) $rawNominal);
+
+        if ($cleanNominal === '' || !ctype_digit($cleanNominal)) {
+            return back()
+                ->withErrors(['nominal' => 'Nominal tidak valid.'])
+                ->withInput();
+        }
+
+        $nominalInt = (int) $cleanNominal;
+
+        // 3. UPDATE DATA
+        $kas->update([
+            'tanggal'    => $request->tanggal,
+            'jenis'      => $request->jenis,
+            'kategori'   => $request->kategori,
+            'keterangan' => $request->keterangan,
+            'nominal'    => $nominalInt,
+        ]);
 
         return redirect()->route('admin.kas.index')
                          ->with('success', 'Data berhasil diperbarui');

@@ -23,7 +23,9 @@
 
         @forelse ($kegiatan as $k)
             @php
-                $absen = $absensiUser[$k->id] ?? null;
+                $absen    = $absensiUser[$k->id] ?? null;
+                $peserta  = $kepesertaan[$k->id] ?? null;
+                $statusPeserta = $peserta->status ?? null;
             @endphp
 
             <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-4">
@@ -42,6 +44,7 @@
                         </div>
                     </div>
 
+                    {{-- BADGE STATUS DI POJOK KANAN --}}
                     <span class="
                         px-3 py-1 rounded-full text-[11px] font-medium
                         @if ($absen && $absen->approval_status === 'approved')
@@ -50,38 +53,59 @@
                             bg-red-100 text-red-700 border border-red-200
                         @elseif ($absen && $absen->approval_status === 'pending')
                             bg-yellow-100 text-yellow-700 border border-yellow-200
+                        @elseif ($statusPeserta === 'pending')
+                            bg-yellow-100 text-yellow-700 border border-yellow-200
                         @else
                             bg-gray-100 text-gray-600 border border-gray-200
                         @endif
                     ">
-                        {{ $absen ? ucfirst($absen->approval_status) : 'Belum Absen' }}
+                        @if ($absen)
+                            {{ ucfirst($absen->approval_status) }}
+                        @elseif ($statusPeserta === 'pending')
+                            Menunggu Persetujuan
+                        @else
+                            Belum Absen
+                        @endif
                     </span>
                 </div>
 
-                @if (! $absen)
+                {{-- BAGIAN ISI / FORM / PESAN --}}
+                @if (! $peserta || $statusPeserta !== 'approved')
 
-                    @include('user.absensi._form', ['kegiatan' => $k])
-
-                @elseif ($absen->approval_status === 'rejected')
-
-                    <p class="text-sm text-red-600 mb-3">
-                        Absensi sebelumnya <strong>ditolak</strong>. Silakan kirim ulang.
-                    </p>
-
-                    @include('user.absensi._form', ['kegiatan' => $k])
-
-                @elseif ($absen->approval_status === 'pending')
-
+                    {{-- User terdaftar tapi belum disetujui --}}
                     <p class="text-sm text-yellow-700">
-                        Absensi kamu sedang <strong>menunggu persetujuan</strong> admin.
+                        Pendaftaranmu untuk kegiatan ini belum disetujui admin,
+                        jadi kamu <strong>belum bisa mengisi absensi</strong>.
                     </p>
 
-                @elseif ($absen->approval_status === 'approved')
+                @else
+                    {{-- Peserta sudah APPROVED --}}
+                    @if (! $absen)
 
-                    <p class="text-sm text-green-700">
-                        Absensi kamu <strong>sudah disetujui</strong>. Terima kasih!
-                    </p>
+                        {{-- BELUM PERNAH ABSEN → TAMPILKAN FORM --}}
+                        @include('user.absensi._form', ['kegiatan' => $k])
 
+                    @elseif ($absen->approval_status === 'rejected')
+
+                        <p class="text-sm text-red-600 mb-3">
+                            Absensi sebelumnya <strong>ditolak</strong>. Silakan kirim ulang.
+                        </p>
+
+                        @include('user.absensi._form', ['kegiatan' => $k])
+
+                    @elseif ($absen->approval_status === 'pending')
+
+                        <p class="text-sm text-yellow-700">
+                            Absensi kamu sedang <strong>menunggu persetujuan</strong> admin.
+                        </p>
+
+                    @elseif ($absen->approval_status === 'approved')
+
+                        <p class="text-sm text-green-700">
+                            Absensi kamu <strong>sudah disetujui</strong>. Terima kasih!
+                        </p>
+
+                    @endif
                 @endif
 
             </div>

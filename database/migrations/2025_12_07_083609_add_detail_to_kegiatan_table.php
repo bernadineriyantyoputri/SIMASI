@@ -8,11 +8,13 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // kosong, karena kolom ini sudah ada di tabel 'absensi'
+        // dikosongkan
+        // kolom jam, lokasi, kuota, gambar, user_id
+        // SUDAH ada dari migration-migration sebelumnya
     }
 
     public function down(): void
     {
-        // kosong juga
+        // dikosongkan juga
     }
 };

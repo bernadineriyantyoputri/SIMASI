@@ -12,7 +12,17 @@ use Illuminate\View\View;
 class ProfileController extends Controller
 {
     /**
-     * Display the user's profile form.
+     * Halaman profil (read-only).
+     */
+    public function show(Request $request): View
+    {
+        return view('profile.show', [
+            'user' => $request->user(),
+        ]);
+    }
+
+    /**
+     * Form edit profil.
      */
     public function edit(Request $request): View
     {
@@ -22,38 +32,34 @@ class ProfileController extends Controller
     }
 
     /**
-     * Update the user's profile information.
+     * Proses update profil.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
-{
-    $user = $request->user();
+    {
+        $user = $request->user();
 
-    // Update field normal (name, email, dll)
-    $user->fill($request->validated());
+        // Isi field dari hasil validasi (name, email, npm)
+        $user->fill($request->validated());
 
-    // Update foto
-    if ($request->hasFile('photo')) {
+        // Jika ada foto baru
+        if ($request->hasFile('photo')) {
+            $path = $request->file('photo')->store('profile-photos', 'public');
+            $user->photo = $path;
+        }
 
-        // Simpan file ke storage/public/profile
-        $path = $request->file('photo')->store('profile', 'public');
+        // Jika email berubah, reset verifikasi
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
 
-        // Simpan ke kolom "photo" pada tabel users
-        $user->photo = $path;
+        $user->save();
+
+        // Setelah simpan -> balik ke halaman profil (bukan tetap di edit)
+        return Redirect::route('profile.show')->with('status', 'profile-updated');
     }
-
-    // Reset verifikasi email jika email berubah
-    if ($user->isDirty('email')) {
-        $user->email_verified_at = null;
-    }
-
-    $user->save();
-
-    return Redirect::route('profile.edit')->with('status', 'profile-updated');
-}
-
 
     /**
-     * Delete the user's account.
+     * Hapus akun.
      */
     public function destroy(Request $request): RedirectResponse
     {

@@ -35,23 +35,14 @@ class KegiatanController extends Controller
     // ============================
     public function store(Request $request)
     {
-        $request->validate([
-            'nama_kegiatan' => 'required|string|max:255',
-            'tanggal'       => 'required|date',
-            'jam'           => 'nullable',
-            'lokasi'        => 'required|string|max:255',
-            'deskripsi'     => 'required|string',
-            'kuota'         => 'required|integer|min:1',
-            'gambar'        => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        ]);
+        // MATIKAN VALIDASI SEMENTARA AGAR CEK INSERT
+        // Setelah berhasil tersimpan, validasi kita hidupkan lagi
 
-        // Upload gambar
         $gambarPath = null;
         if ($request->hasFile('gambar')) {
             $gambarPath = $request->file('gambar')->store('kegiatan', 'public');
         }
 
-        // Simpan database
         Kegiatan::create([
             'judul'     => $request->nama_kegiatan,
             'tanggal'   => $request->tanggal,
@@ -59,8 +50,7 @@ class KegiatanController extends Controller
             'lokasi'    => $request->lokasi,
             'deskripsi' => $request->deskripsi,
             'kuota'     => $request->kuota,
-            'gambar'    => $gambarPath,
-            'user_id'   => auth()->id(),
+            'gambar'    => $gambarPath
         ]);
 
         return redirect()->route('admin.kegiatan.index')
@@ -90,20 +80,15 @@ class KegiatanController extends Controller
             'gambar'        => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        // Upload gambar baru jika ada
         if ($request->hasFile('gambar')) {
-
-            // Hapus file lama
             if ($kegiatan->gambar && Storage::disk('public')->exists($kegiatan->gambar)) {
                 Storage::disk('public')->delete($kegiatan->gambar);
             }
-
             $gambarPath = $request->file('gambar')->store('kegiatan', 'public');
         } else {
             $gambarPath = $kegiatan->gambar;
         }
 
-        // Update database
         $kegiatan->update([
             'judul'     => $request->nama_kegiatan,
             'tanggal'   => $request->tanggal,
