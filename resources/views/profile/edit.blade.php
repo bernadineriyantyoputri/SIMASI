@@ -6,76 +6,43 @@
 
     <h2 class="text-2xl font-bold mb-6">Edit Profil</h2>
 
-    <form method="POST" action="{{ route('profile.update') }}" 
-          enctype="multipart/form-data" class="space-y-6">
+    <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PATCH')
 
-        {{-- NAMA --}}
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-                Nama
-            </label>
-            <input type="text" name="name"
-                   class="w-full border rounded-lg px-3 py-2"
-                   value="{{ old('name', $user->name) }}">
-            @error('name')
-                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-            @enderror
+        <div class="mb-4">
+            <label class="block text-sm mb-1">Nama</label>
+            <input type="text" name="name" value="{{ old('name', $user->name) }}"
+                   class="w-full border px-3 py-2 rounded">
         </div>
 
-        {{-- EMAIL --}}
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-                Email
-            </label>
-            <input type="email" name="email"
-                   class="w-full border rounded-lg px-3 py-2"
-                   value="{{ old('email', $user->email) }}">
-            @error('email')
-                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-            @enderror
+        <div class="mb-4">
+            <label class="block text-sm mb-1">Email</label>
+            <input type="email" name="email" value="{{ old('email', $user->email) }}"
+                   class="w-full border px-3 py-2 rounded">
         </div>
 
-        {{-- NPM --}}
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-                NPM
-            </label>
-            <input type="text" name="npm"
-                   class="w-full border rounded-lg px-3 py-2"
-                   value="{{ old('npm', $user->npm) }}">
-            @error('npm')
-                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-            @enderror
+        <div class="mb-4">
+            <label class="block text-sm mb-1">NPM</label>
+            <input type="text" name="npm" value="{{ old('npm', $user->npm) }}"
+                   class="w-full border px-3 py-2 rounded">
         </div>
 
-        {{-- FOTO PROFIL --}}
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-                Foto Profil
-            </label>
-            <input type="file" name="photo"
-                   class="w-full border rounded-lg px-3 py-2 bg-white">
-            @error('photo')
-                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-            @enderror
-
-            @if ($user->photo)
-                <div class="mt-3">
-                    <p class="text-xs text-gray-500 mb-1">Foto saat ini:</p>
-                    <img src="{{ asset('storage/'.$user->photo) }}"
-                         class="w-20 h-20 rounded-full object-cover border">
-                </div>
-            @endif
+        <div class="mb-4">
+            <label class="block text-sm mb-1">Foto Profil</label>
+            <input type="file" name="photo" class="w-full">
         </div>
 
-        {{-- TOMBOL --}}
-        <div class="flex items-center justify-between pt-4 border-t">
+        @if ($user->photo)
+            <div class="mb-4">
+                <img src="{{ asset('storage/'.$user->photo) }}"
+                     class="w-20 h-20 rounded-full border object-cover">
+            </div>
+        @endif
+
+        <div class="mt-6 flex justify-end gap-2">
             <a href="{{ route('profile.show') }}"
-               class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400">
-                Kembali
-            </a>
+                class="px-4 py-2 bg-gray-300 text-black rounded-lg hover:bg-gray-400">Kembali</a>
 
             <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
                 Simpan Perubahan

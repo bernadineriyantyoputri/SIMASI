@@ -2,80 +2,74 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
     /**
-     * Halaman profil (read-only).
+     * Tampilkan halaman profil (read only)
+     * /profile
      */
-    public function show(Request $request): View
+    public function show()
     {
-        return view('profile.show', [
-            'user' => $request->user(),
-        ]);
+        $user = Auth::user();   // bisa admin atau user biasa
+
+        return view('profile.show', compact('user'));
     }
 
     /**
-     * Form edit profil.
+     * Tampilkan form edit profil
+     * /profile/edit
      */
-    public function edit(Request $request): View
+    public function edit()
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        $user = Auth::user();
+
+        return view('profile.edit', compact('user'));
     }
 
     /**
-     * Proses update profil.
+     * Simpan perubahan profil
+     * PATCH /profile
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(Request $request)
     {
-        $user = $request->user();
+        $user = Auth::user();
 
-        // Isi field dari hasil validasi (name, email, npm)
-        $user->fill($request->validated());
+        $data = $request->validate([
+            'name'  => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'npm'   => ['nullable', 'string', 'max:30', 'unique:users,npm,' . $user->id],
+            'photo' => ['nullable', 'image', 'max:2048'], // 2MB
+        ]);
 
-        // Jika ada foto baru
+        // Handle upload foto baru
         if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('profile-photos', 'public');
-            $user->photo = $path;
+            // Hapus foto lama kalau ada
+            if ($user->photo && Storage::disk('public')->exists($user->photo)) {
+                Storage::disk('public')->delete($user->photo);
+            }
+
+            $data['photo'] = $request->file('photo')->store('profile-photos', 'public');
         }
 
-        // Jika email berubah, reset verifikasi
-        if ($user->isDirty('email')) {
-            $user->email_verified_at = null;
-        }
+        // Update data user (admin atau user biasa)
+        $user->update($data);
 
-        $user->save();
-
-        // Setelah simpan -> balik ke halaman profil (bukan tetap di edit)
-        return Redirect::route('profile.show')->with('status', 'profile-updated');
+        // Setelah simpan, balik lagi ke halaman profil
+        return redirect()
+            ->route('profile.show')
+            ->with('success', 'Profil berhasil diperbarui.');
     }
 
     /**
-     * Hapus akun.
+     * (Opsional) Hapus akun sendiri — kalau tidak dipakai, boleh kosong / diabaikan.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request)
     {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
-        ]);
-
-        $user = $request->user();
-
-        Auth::logout();
-
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+        // Untuk proyek ini sepertinya tidak perlu fitur hapus akun sendiri.
+        abort(404);
     }
 }

@@ -4,7 +4,7 @@
 
 <div class="p-6 bg-white rounded-xl shadow">
 
-    {{-- Flash message dari update profile --}}
+    {{-- pesan berhasil update --}}
     @if (session('status') === 'profile-updated')
         <div class="p-3 mb-4 bg-green-100 text-green-700 rounded">
             Profil berhasil diperbarui.
@@ -38,23 +38,17 @@
 
             <div>
                 <div class="text-sm text-gray-500 mb-1">Nama</div>
-                <div class="border rounded-lg px-3 py-2 bg-gray-50">
-                    {{ $user->name }}
-                </div>
+                <div class="border rounded-lg px-3 py-2 bg-gray-50">{{ $user->name }}</div>
             </div>
 
             <div>
                 <div class="text-sm text-gray-500 mb-1">Email</div>
-                <div class="border rounded-lg px-3 py-2 bg-gray-50">
-                    {{ $user->email }}
-                </div>
+                <div class="border rounded-lg px-3 py-2 bg-gray-50">{{ $user->email }}</div>
             </div>
 
             <div>
                 <div class="text-sm text-gray-500 mb-1">NPM</div>
-                <div class="border rounded-lg px-3 py-2 bg-gray-50">
-                    {{ $user->npm ?? '-' }}
-                </div>
+                <div class="border rounded-lg px-3 py-2 bg-gray-50">{{ $user->npm ?? '-' }}</div>
             </div>
 
         </div>

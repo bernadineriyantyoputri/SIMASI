@@ -53,6 +53,9 @@ class PenggunaController extends Controller
             $data['photo'] = $request->file('photo')->store('profile-photos', 'public');
         }
 
+        // PENGGUNA DIBUAT ADMIN -> LANGSUNG TER-VERIFIKASI
+        $data['is_verified'] = true;
+
         User::create($data);
 
         return redirect()
@@ -104,6 +107,7 @@ class PenggunaController extends Controller
             $data['photo'] = $request->file('photo')->store('profile-photos', 'public');
         }
 
+        // is_verified tidak diutak-atik di sini, biarkan nilai sebelumnya
         $pengguna->update($data);
 
         return redirect()
